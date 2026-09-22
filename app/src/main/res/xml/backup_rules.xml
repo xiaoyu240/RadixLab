@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  云备份排除规则（Android 11 及以下）。
+  历史记录属于本地隐私数据，明确排除，不做任何云端备份。
+-->
+<full-backup-content>
+    <exclude domain="file" path="datastore" />
+    <exclude domain="sharedpref" path="radixlab_store.preferences_pb" />
+</full-backup-content>

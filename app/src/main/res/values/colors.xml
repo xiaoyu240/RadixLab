@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ==================== 品牌色 ==================== -->
+    <color name="brand_primary">#2563EB</color>
+    <color name="brand_primary_dark">#1D4ED8</color>
+    <color name="brand_primary_light">#DBEAFE</color>
+    <color name="brand_accent">#06B6D4</color>
+    <color name="brand_success">#10B981</color>
+    <color name="brand_error">#EF4444</color>
+    <color name="brand_warning">#F59E0B</color>
+
+    <!-- ==================== 浅色模式表面 ==================== -->
+    <color name="bg">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="border">#E2E8F0</color>
+
+    <!-- ==================== 启动图标 ==================== -->
+    <color name="ic_launcher_background">#2563EB</color>
+
+</resources>

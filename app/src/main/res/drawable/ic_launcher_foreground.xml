@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  应用图标前景层。
+  图形语言与网站 web/assets/icon.png 完全一致：
+  白色「1」（竖条）+ 白色「0」（圆环）+ 青色强调点，代表二进制。
+  画布 108x108，内容限制在中心 72x72 安全区内。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 「1」：竖条 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,34 h8 v40 h-8 Z" />
+
+    <!-- 「0」：圆环（evenOdd 挖空中心） -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M42,54 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0 Z M50,54 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 Z" />
+
+    <!-- 强调点：品牌青（brand-accent #06B6D4） -->
+    <path
+        android:fillColor="#06B6D4"
+        android:pathData="M56,54 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 Z" />
+
+</vector>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  数据提取规则（Android 12 / API 31 及以上）。
+  cloud-backup 与 device-transfer 均排除本地 DataStore，保证记录不出设备。
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="datastore" />
+        <exclude domain="sharedpref" path="radixlab_store.preferences_pb" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="datastore" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  自适应图标（API 26+，与 minSdk 26 一致，无需额外密度资源）。
+  背景：#2563EB（brand-primary）
+  前景：ic_launcher_foreground.xml
+  单色：同一份前景，用于 Android 13+ 主题化图标
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

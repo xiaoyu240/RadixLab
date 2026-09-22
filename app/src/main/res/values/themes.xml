@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+      应用主题。
+      界面完全由 Jetpack Compose + Material 3 绘制，
+      这里只配置窗口背景与状态栏样式，保证启动瞬间不闪白屏。
+    -->
+    <style name="Theme.RadixLab" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+</resources>
