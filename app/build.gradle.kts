@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,9 +7,40 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// ---- 签名配置 ----
+// 证书与口令写在 keystore.properties（已在 .gitignore 中排除，不会上传 GitHub）。
+// 若该文件缺失，release 构建会自动回退到 debug 签名，便于本机直接跑通。
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) {
+        keystorePropsFile.inputStream().use { load(it) }
+    }
+}
+// 注意：必须以 rootProject 为基准解析路径。
+// app 模块里的 file(...) 会以 android/app 为相对根，而证书在 android/keystore/ 下。
+val releaseKeystoreFile = keystoreProps.getProperty("storeFile")
+    ?.let { rootProject.file(it) }
+
+val hasReleaseKeystore = releaseKeystoreFile?.exists() == true
+
 android {
     namespace = "com.radixlab.app"
     compileSdk = 35
+
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = releaseKeystoreFile
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+                // 同时启用 V1/V2/V3 签名，兼容各版本 Android
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.radixlab.app"
@@ -35,8 +67,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // 正式发布前请在此处配置自己的签名配置，例如：
-            // signingConfig = signingConfigs.getByName("release")
+            // 有正式证书就用正式证书，否则回退 debug 签名（保证本机可构建）
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 

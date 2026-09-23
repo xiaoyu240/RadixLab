@@ -18,6 +18,7 @@ out/
 # 本地配置（包含 SDK 路径 / 签名信息，绝不提交）
 local.properties
 keystore.properties
+keystore/
 *.jks
 *.keystore
 
