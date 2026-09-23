@@ -4,7 +4,7 @@
     <!--
       权限说明：本应用不申请任何权限，包括 android.permission.INTERNET。
       应用无法联网，所有进制 / IP 计算均在设备本地完成。
-      详见 https://xiaoyu240.github.io/RadixLab-Website/privacy.html
+      详见 http://uk.frp.one:52600/privacy.html
     -->
 
     <application

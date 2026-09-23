@@ -190,7 +190,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                 Text(text = "隐私政策")
             }
             TextButton(onClick = { openUrl(websiteRepoUrl) }, shape = ChipShape) {
-                Text(text = "网站源码")
+                Text(text = "源码仓库")
             }
             TextButton(onClick = { openUrl(issuesUrl) }, shape = ChipShape) {
                 Icon(
@@ -227,6 +227,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                 InfoRow(label = "软件名称", value = stringResource(R.string.app_name))
+                InfoRow(label = "开发工作室", value = stringResource(R.string.app_studio))
                 InfoRow(label = "版本", value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 InfoRow(label = "包名", value = BuildConfig.APPLICATION_ID)
                 InfoRow(label = "系统要求", value = "Android 8.0 及以上（API 26+）")
@@ -293,6 +294,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         // ---------------------------------------------------------------
         Text(
             text = "© 2024-2026 ${stringResource(R.string.app_name)} RadixLab\n" +
+                stringResource(R.string.app_studio) + " 出品\n" +
                 stringResource(R.string.app_slogan),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -3,6 +3,7 @@
 
     <!-- ==================== 品牌 ==================== -->
     <string name="app_name">进制工坊</string>
+    <string name="app_studio">昱心工作室</string>
     <string name="app_slogan">进制转换，一个就够</string>
     <string name="app_desc">2-36 任意进制互转 · IPv4 / IPv6 转换 · 历史记录与收藏。纯本地工具，不联网、不收集任何数据。</string>
 
@@ -74,11 +75,12 @@
     <string name="result_waiting">等待输入</string>
 
     <!-- ==================== 链接 ==================== -->
-    <!-- TODO: 发布前把 xiaoyu240 全部替换为真实 GitHub 用户名 -->
     <string name="url_github" translatable="false">https://github.com/xiaoyu240/RadixLab</string>
-    <string name="url_website_repo" translatable="false">https://github.com/xiaoyu240/RadixLab-Website</string>
-    <string name="url_website" translatable="false">https://xiaoyu240.github.io/RadixLab-Website/</string>
-    <string name="url_privacy" translatable="false">https://xiaoyu240.github.io/RadixLab-Website/privacy.html</string>
+    <!-- 软件源码仓库（原先指向的 RadixLab-Website 仓库不存在，已统一到源码仓库） -->
+    <string name="url_website_repo" translatable="false">https://github.com/xiaoyu240/RadixLab</string>
+    <!-- 官方网站：目前为 ChmlFrp 隧道地址，改用自有域名或 HTTPS 时替换此处 -->
+    <string name="url_website" translatable="false">http://uk.frp.one:52600/</string>
+    <string name="url_privacy" translatable="false">http://uk.frp.one:52600/privacy.html</string>
     <string name="url_issues" translatable="false">https://github.com/xiaoyu240/RadixLab/issues</string>
     <string name="url_releases" translatable="false">https://github.com/xiaoyu240/RadixLab/releases</string>
 

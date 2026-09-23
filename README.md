@@ -6,7 +6,7 @@
 - 包名：`com.radixlab.app`
 - 显示名：进制工坊
 - minSdk 26 / targetSdk 35 / compileSdk 35
-- 官网：https://xiaoyu240.github.io/RadixLab-Website/
+- 官网：http://uk.frp.one:52600/
 
 ---
 
@@ -150,16 +150,22 @@ buildTypes {
 
 ---
 
-## 三、发布前必须替换的占位符
+## 三、需要随环境更新的地址
 
-| 位置 | 占位符 | 说明 |
+用户名 `xiaoyu240` 与仓库地址都已确定为真实值，不再是占位符。唯一需要在
+「官网换域名」时同步的是 `res/values/strings.xml` 里的 4 条链接：
+
+| 资源名 | 当前值 | 说明 |
 | --- | --- | --- |
-| `res/values/strings.xml` | `xiaoyu240` | 6 个 URL，替换为真实 GitHub 用户名 |
+| `url_github` | `https://github.com/xiaoyu240/RadixLab` | 开源项目入口 |
+| `url_website_repo` | `https://github.com/xiaoyu240/RadixLab` | 源码仓库（原 `RadixLab-Website` 仓库不存在，已统一） |
+| `url_website` | `http://uk.frp.one:52600/` | 官方网站（ChmlFrp 隧道） |
+| `url_privacy` | `http://uk.frp.one:52600/privacy.html` | 隐私政策 |
+| `url_issues` | `https://github.com/xiaoyu240/RadixLab/issues` | 问题反馈 |
+| `url_releases` | `https://github.com/xiaoyu240/RadixLab/releases` | 版本发布页 |
 
-```bash
-# android/ 目录下
-grep -rl "xiaoyu240" app/src/main/res | xargs sed -i 's/xiaoyu240/YOURNAME/g'
-```
+> 这些链接通过 `Intent.ACTION_VIEW` 交给系统浏览器打开，因此用 `http://`（明文）
+> 也不受应用自身 cleartext 策略限制。换成自有域名或 HTTPS 后，改完需重新打包 APK。
 
 替换后「关于」页的两个按钮（`Intent.ACTION_VIEW`）才会指向真实地址。
 
@@ -248,4 +254,4 @@ App 侧的全部颜色 / 圆角 / 间距 / 字体 Token 定义在 `ui/theme/` �
 - 无网络代码路径，无第三方统计 / 广告 SDK；
 - 记录通过 `backup_rules.xml` 与 `data_extraction_rules.xml` 排除云备份。
 
-详见 https://xiaoyu240.github.io/RadixLab-Website/privacy.html
+详见 http://uk.frp.one:52600/privacy.html
