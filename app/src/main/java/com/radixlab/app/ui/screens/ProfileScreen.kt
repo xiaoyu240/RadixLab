@@ -1,6 +1,11 @@
 package com.radixlab.app.ui.screens
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -16,14 +21,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,19 +45,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.radixlab.app.BuildConfig
+import com.radixlab.app.R
 import com.radixlab.app.data.model.RecordType
 import com.radixlab.app.ui.components.BrandLogo
 import com.radixlab.app.ui.components.HistoryItem
-import com.radixlab.app.ui.components.InfoCard
 import com.radixlab.app.ui.theme.CardShape
 import com.radixlab.app.ui.theme.ChipShape
 import com.radixlab.app.ui.theme.Dimens
-import com.radixlab.app.ui.theme.FieldShape
 import com.radixlab.app.ui.theme.MonoSmall
 import com.radixlab.app.ui.theme.ThemeMode
 import com.radixlab.app.viewmodel.ConverterViewModel
@@ -55,7 +67,7 @@ import com.radixlab.app.viewmodel.ConverterViewModel
 /**
  * 「我的」页面。
  *
- * 外观设置（跟随系统 / 浅色 / 深色）+ 历史记录（筛选、收藏、删除、清空）。
+ * 三块内容，从上到下：外观设置 / 历史记录 / 关于。
  * 所有数据仅保存在本机 DataStore 中。
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -93,19 +105,11 @@ fun ProfileScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 BrandLogo(size = Dimens.LogoMedium)
                 Spacer(modifier = Modifier.width(Dimens.Space3))
-                Column {
-                    Text(
-                        text = "我的",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "历史记录与外观设置",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
+                Text(
+                    text = "我的",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         }
 
@@ -133,8 +137,7 @@ fun ProfileScreen(
                     )
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.Space2),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.Space2)
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.Space2)
                     ) {
                         ThemeMode.entries.forEach { mode ->
                             FilterChip(
@@ -149,49 +152,45 @@ fun ProfileScreen(
                             )
                         }
                     }
-                    Text(
-                        text = "跟随系统时会随手机的深色模式自动切换；网站与 App 使用同一套颜色规范。",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
         }
 
         // ---------------------------------------------------------------
-        // 历史记录标题 + 统计 + 清空
+        // 历史记录
         // ---------------------------------------------------------------
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.History,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(Dimens.IconMedium)
-                )
-                Spacer(modifier = Modifier.width(Dimens.Space2))
                 Text(
                     text = "历史记录",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "共 ${history.size} 条 · 收藏 $favoriteCount",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                if (history.isNotEmpty()) {
+                    TextButton(
+                        onClick = { showClearDialog = true },
+                        shape = ChipShape
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteSweep,
+                            contentDescription = null,
+                            modifier = Modifier.size(Dimens.IconSmall)
+                        )
+                        Spacer(modifier = Modifier.width(Dimens.Space1))
+                        Text(text = "清空")
+                    }
+                }
             }
         }
 
         item {
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.Space2),
-                verticalArrangement = Arrangement.spacedBy(Dimens.Space2)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.Space2)
             ) {
                 FilterChip(
                     selected = !showFavoritesOnly,
@@ -220,58 +219,20 @@ fun ProfileScreen(
                         selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 )
-                if (history.isNotEmpty()) {
-                    TextButton(
-                        onClick = { showClearDialog = true },
-                        shape = ChipShape
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.DeleteSweep,
-                            contentDescription = null,
-                            modifier = Modifier.size(Dimens.IconSmall)
-                        )
-                        Spacer(modifier = Modifier.width(Dimens.Space2))
-                        Text(text = "清空")
-                    }
-                }
             }
         }
 
-        // ---------------------------------------------------------------
-        // 列表
-        // ---------------------------------------------------------------
         if (visibleRecords.isEmpty()) {
             item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = CardShape,
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(Dimens.Space8),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Dimens.Space2)
-                    ) {
-                        Text(
-                            text = if (showFavoritesOnly) "还没有收藏的记录" else "还没有历史记录",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = if (showFavoritesOnly) {
-                                "在历史记录里点星标即可收藏常用数值"
-                            } else {
-                                "去首页完成一次进制转换，记录会自动出现在这里"
-                            },
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+                Text(
+                    text = if (showFavoritesOnly) {
+                        "还没有收藏的记录，在记录里点星标即可收藏"
+                    } else {
+                        "还没有历史记录，去首页完成一次转换即可"
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         } else {
             items(items = visibleRecords, key = { it.id }) { record ->
@@ -289,26 +250,22 @@ fun ProfileScreen(
         }
 
         // ---------------------------------------------------------------
-        // 说明
+        // 关于
         // ---------------------------------------------------------------
         item {
-            InfoCard(title = "数据说明", borderColor = MaterialTheme.colorScheme.primaryContainer) {
-                Text(
-                    text = "· 全部记录仅保存在本机应用私有目录（DataStore），不会上传到任何服务器",
-                    style = MonoSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "· 最多保留 300 条，收藏的记录不会被自动清理",
-                    style = MonoSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "· 卸载应用即彻底删除全部数据",
-                    style = MonoSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            AboutCard()
+        }
+
+        item {
+            Text(
+                text = "© 2024-2026 ${stringResource(R.string.app_name)} · " +
+                    stringResource(R.string.app_studio) + " 出品\n" +
+                    "数据仅保存在本机，卸载即彻底删除",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 
@@ -345,6 +302,122 @@ fun ProfileScreen(
                     Text(text = "取消")
                 }
             }
+        )
+    }
+}
+
+/**
+ * 「关于」卡片：版本 + 常用链接，紧凑列表样式。
+ */
+@Composable
+private fun AboutCard(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    val githubUrl = stringResource(R.string.url_github)
+    val websiteUrl = stringResource(R.string.url_website)
+    val privacyUrl = stringResource(R.string.url_privacy)
+    val issuesUrl = stringResource(R.string.url_issues)
+
+    fun openUrl(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (exception: ActivityNotFoundException) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.browser_missing),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = CardShape,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.CardPadding),
+            verticalArrangement = Arrangement.spacedBy(Dimens.Space2)
+        ) {
+            Text(
+                text = "关于",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+            AboutRow(label = "版本", value = "v${BuildConfig.VERSION_NAME}")
+
+            AboutLink(label = "源码仓库", icon = Icons.Outlined.Code) { openUrl(githubUrl) }
+            AboutLink(label = "官方网站", icon = Icons.Outlined.Language) { openUrl(websiteUrl) }
+            AboutLink(label = "隐私政策", icon = Icons.Outlined.Lock) { openUrl(privacyUrl) }
+            AboutLink(label = "问题反馈", icon = Icons.Outlined.MailOutline) { openUrl(issuesUrl) }
+        }
+    }
+}
+
+/** 非链接信息行：左侧标签、右侧等宽值 */
+@Composable
+private fun AboutRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.Space1),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = value,
+            style = MonoSmall,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+/** 可点击链接行：左侧图标 + 标签，右侧箭头 */
+@Composable
+private fun AboutLink(
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = Dimens.Space2),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(Dimens.IconSmall)
+        )
+        Spacer(modifier = Modifier.width(Dimens.Space3))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(Dimens.IconMedium)
         )
     }
 }

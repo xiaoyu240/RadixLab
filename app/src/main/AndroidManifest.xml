@@ -14,14 +14,24 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RadixLab">
+        android:theme="@style/Theme.RadixLab"
+        android:enableOnBackInvokedCallback="true">
 
+        <!--
+          竖屏锁定：screenOrientation 管手机；resizeableActivity=false 让 Android 12L
+          之后的大屏（平板 / 折叠屏展开）也不会把应用拉成横屏或分屏。
+          configChanges 保留 orientation 等，避免系统在某些 ROM 上仍然抛配置变更重建。
+          额外开启 enableOnBackInvokedCallback，让「侧滑返回」走系统预测式返回手势，
+          手势跟随与我们的 NavHost 转场动画由 Navigation Compose 接管。
+        -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|smallestScreenSize|density"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.RadixLab"
             android:windowSoftInputMode="adjustResize">
 

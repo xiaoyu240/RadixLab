@@ -46,8 +46,13 @@ android {
         applicationId = "com.radixlab.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        // 版本号规则：小更新只动第三位（1.0.0 → 1.0.1），大更新动第二位（1.0.x → 1.1.0）。
+        // versionCode 每次发版必须 +1（Android 要求单调递增，与版本名无关）。
+        // 1.3.0 = 中更新（用户定的「动第二位」口径）：
+        //   全应用锁定竖屏；工具页改成独立路由，进入时不再显示底部导航栏；
+        //   新增推入 / 弹出转场动画；首页返回改为双击退出，其他页面返回是回上一页。
+        versionCode = 5
+        versionName = "1.3.0"
 
         // 无自定义测试 runner，保持工程零冗余依赖
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

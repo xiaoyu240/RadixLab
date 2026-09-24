@@ -5,13 +5,9 @@
     <string name="app_name">进制工坊</string>
     <string name="app_studio">昱心工作室</string>
     <string name="app_slogan">进制转换，一个就够</string>
-    <string name="app_desc">2-36 任意进制互转 · IPv4 / IPv6 转换 · 历史记录与收藏。纯本地工具，不联网、不收集任何数据。</string>
+    <string name="app_desc">2-36 任意进制互转 · IPv4 / IPv6 转换 · 大数计算器 · 历史记录与收藏。纯本地工具，不联网、不收集任何数据。</string>
 
-    <!-- ==================== 底部导航 ==================== -->
-    <string name="nav_home">首页</string>
-    <string name="nav_ip">IP工具</string>
-    <string name="nav_profile">我的</string>
-    <string name="nav_about">关于</string>
+    <!-- ==================== 底部导航（首页/我的；标签硬编码于 BottomNavItem） ==================== -->
 
     <!-- ==================== 首页 ==================== -->
     <string name="home_input_label">待转换的数值</string>
@@ -54,15 +50,7 @@
     <string name="history_favorite_empty">还没有收藏的记录</string>
     <string name="history_local_note">全部记录仅保存在本机，不会上传到任何服务器</string>
 
-    <!-- ==================== 关于 ==================== -->
-    <string name="about_open_github">打开 GitHub 开源项目</string>
-    <string name="about_open_website">打开官方网站</string>
-    <string name="about_privacy">隐私政策</string>
-    <string name="about_website_repo">网站源码</string>
-    <string name="about_issues">问题反馈</string>
-    <string name="about_app_info">应用信息</string>
-    <string name="about_tech">技术栈</string>
-    <string name="about_privacy_title">隐私承诺</string>
+    <!-- ==================== 关于（已并入「我的」页，链接见下方 url_*） ==================== -->
     <string name="browser_missing">未找到可用的浏览器，请先安装浏览器后重试</string>
 
     <!-- ==================== 通用 ==================== -->

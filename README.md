@@ -26,23 +26,25 @@ android/
     ├── build.gradle.kts                模块构建脚本
     ├── proguard-rules.pro              R8 混淆规则
     └── src/main/
-        ├── AndroidManifest.xml         ★ 无任何权限声明
+        ├── AndroidManifest.xml         ★ 无任何权限声明；锁定竖屏 + 开启预测式返回
         ├── java/com/radixlab/app/
         │   ├── MainActivity.kt         唯一 Activity，边到边 + 主题分发
-        │   ├── RadixLabApp.kt          根组件：底部导航 + 导航图
+        │   ├── RadixLabApp.kt          根组件：底部导航（仅顶层页显示）+ 双击退出
         │   ├── navigation/
-        │   │   ├── AppNavHost.kt       导航图
-        │   │   └── BottomNavItem.kt    首页 / IP工具 / 我的 / 关于
-        │   ├── ui/theme/               设计 Token（与网站一一对应）
+        │   │   ├── AppNavHost.kt       导航图 + 推入/弹出转场（含 tool/{key} 子页面路由）
+        │   │   └── BottomNavItem.kt    首页 / 我的
+        │   ├── ui/theme/               设计 Token（与网站语义色共用）
         │   │   ├── Color.kt            颜色
         │   │   ├── Theme.kt            主题 + 深浅色模式
         │   │   ├── Type.kt             字体（等宽用于进制结果）
         │   │   └── Shape.kt            圆角 + 间距 Token
         │   ├── ui/screens/
-        │   │   ├── HomeScreen.kt       通用进制转换
-        │   │   ├── IpConverterScreen.kt IP 转换
-        │   │   ├── ProfileScreen.kt    历史记录 + 收藏 + 外观
-        │   │   └── AboutScreen.kt      关于（GitHub / 官网入口）
+        │   │   ├── HomeScreen.kt       首页：品牌头部 + 正方形工具卡片宫格
+        │   │   ├── ToolScreen.kt       工具页外壳：返回行 + 内容（无底部导航栏）
+        │   │   ├── ConverterContent.kt 进制转换
+        │   │   ├── CalculatorContent.kt 大数计算器（含 π）
+        │   │   ├── IpToolContent.kt    IP 转换
+        │   │   └── ProfileScreen.kt    历史记录 + 收藏 + 外观 + 关于
         │   ├── ui/components/
         │   │   ├── BaseSelector.kt     进制选择器（2-36）
         │   │   ├── ResultCard.kt       结果卡 / 说明卡
@@ -50,9 +52,12 @@ android/
         │   │   └── BrandLogo.kt        品牌图标（复用启动图标图形）
         │   ├── viewmodel/
         │   │   ├── ConverterViewModel.kt
+        │   │   ├── CalculatorViewModel.kt
         │   │   └── IpViewModel.kt
         │   ├── data/
         │   │   ├── ConversionEngine.kt 2-36 进制互转（BigInteger）
+        │   │   ├── CalculatorEngine.kt 有理数精确四则运算
+        │   │   ├── PiEngine.kt         Chudnovsky 公式 + 二进制分裂
         │   │   ├── IpUtils.kt          IPv4 / IPv6 工具
         │   │   ├── model/ConversionRecord.kt
         │   │   └── repository/HistoryRepository.kt   DataStore
@@ -195,16 +200,16 @@ git push -u origin main
 ./gradlew assembleRelease
 
 # 用 gh CLI 发布（首次需 gh auth login）
-gh release create v1.0.0 \
-  app/build/outputs/apk/release/app-release.apk#RadixLab-1.0.0.apk \
-  --title "进制工坊 v1.0.0" \
-  --notes "首个正式版本：2-36 任意进制互转、IPv4/IPv6 转换、历史记录与收藏。"
+gh release create v1.3.0 \
+  app/build/outputs/apk/release/app-release.apk#RadixLab-1.3.0.apk \
+  --title "进制工坊 v1.3.0" \
+  --notes "全应用锁定竖屏；工具页改为独立路由，进入后不再显示底部导航栏，并带推入/弹出转场动画；首页返回改为双击退出。"
 ```
 
 发布后，官网的下载按钮即可使用永久链接：
 
 ```
-https://github.com/xiaoyu240/RadixLab/releases/latest/download/RadixLab-1.0.0.apk
+https://github.com/xiaoyu240/RadixLab/releases/latest/download/RadixLab-1.3.0.apk
 ```
 
 ---
@@ -217,34 +222,42 @@ https://github.com/xiaoyu240/RadixLab/releases/latest/download/RadixLab-1.0.0.ap
 | 非法字符校验 | 逐字符比对，错误信息精确到「第 N 位」并给出合法字符范围 |
 | 转换步骤 | `Result.Success.steps`，界面可折叠展示；超长数字自动省略中间步骤 |
 | IP 转换 | `IpUtils`：IPv4 四种表示互转，每段 0-255 严格校验；IPv6 压缩/展开 + 内嵌 IPv4 |
+| 大数计算器 | `CalculatorEngine`，`BigInteger` 有理数精确运算：四则、括号、乘方、取余；除不尽保留 10 位并标记为近似值 |
+| π 无限计算 | `PiEngine`：Chudnovsky 公式 + 二进制分裂，自研整数开方 `isqrt`（Android 8–12 没有 `BigInteger.sqrt()`）；50 位首次警告，此后每涨 1 MB 提醒一次，10 MB 强制停 |
 | 历史记录 | `HistoryRepository` + DataStore（JSON 序列化），去重、裁剪至 300 条、收藏优先保留 |
 | 收藏 | 记录上的 `favorite` 标记，「我的」页可筛选 |
 | 深浅色 | `RadixLabTheme` + `ThemeMode`（跟随系统/浅色/深色），持久化在 DataStore |
 | 一键复制 | `ClipboardUtils`，只写不读剪贴板 |
-| 打开链接 | `AboutScreen` 中 `Intent.ACTION_VIEW`，异常时 Toast 兜底 |
+| 打开链接 | 「我的」页关于卡中 `Intent.ACTION_VIEW`，异常时 Toast 兜底 |
+| 竖屏锁定 | `AndroidManifest.xml`：`screenOrientation="portrait"` + `resizeableActivity="false"`（Android 12L+ 的大屏 / 折叠屏也不会被拉横或分屏） |
+| 页面转场 | `AppNavHost` 统一配 `enter/exit/popEnter/popExit`：推入时新页从右滑入、旧页左移 1/3 淡出；返回正好相反。Tab 之间只做淡入淡出 |
+| 子页隐藏底栏 | 工具页是独立路由 `tool/{key}`（不属于 `BottomNavItem`）；`RadixLabApp` 只在顶层路由渲染 `bottomBar`，切换时底部栏整体滑下 / 滑上 |
+| 返回行为 | `enableOnBackInvokedCallback="true"` 走系统预测式返回手势；工具页侧滑 = 回上一页；首页用 `BackHandler` 双击退出（2 秒窗口，首次弹 Toast） |
 
-### 设计规范一致性
+### 设计规范
 
-App 侧的全部颜色 / 圆角 / 间距 / 字体 Token 定义在 `ui/theme/` 下，
-与网站 `web/css/style.css` 的 CSS 变量一一对应：
+App 侧的全部颜色 / 圆角 / 间距 / 字体 Token 定义在 `ui/theme/` 下：
 
-| App（Kotlin） | Web（CSS） | 值 |
-| --- | --- | --- |
-| `BrandPrimary` | `--brand-primary` | `#2563EB` |
-| `BrandPrimaryDark` | `--brand-primary-dark` | `#1D4ED8` |
-| `BrandPrimaryLight` | `--brand-primary-light` | `#DBEAFE` |
-| `BrandAccent` | `--brand-accent` | `#06B6D4` |
-| `BrandSuccess` | `--brand-success` | `#10B981` |
-| `BrandError` | `--brand-error` | `#EF4444` |
-| `BrandWarning` | `--brand-warning` | `#F59E0B` |
-| `LightBg` / `DarkBg` | `--bg` | `#F8FAFC` / `#0B1220` |
-| `LightSurface` / `DarkSurface` | `--surface` | `#FFFFFF` / `#111827` |
-| `LightTextPrimary` / `DarkTextPrimary` | `--text-primary` | `#0F172A` / `#F1F5F9` |
-| `LightTextSecondary` / `DarkTextSecondary` | `--text-secondary` | `#64748B` / `#94A3B8` |
-| `LightBorder` / `DarkBorder` | `--border` | `#E2E8F0` / `#1E293B` |
-| `RadiusSmall/Medium/Large` | `--radius-sm/md/lg` | `8 / 12 / 20 dp` |
-| `Dimens.Space1..8` | `--space-1..8` | `4 / 8 / 12 / 16 / 24 / 32 dp` |
-| `MonoFontFamily` | `--font-mono` | JetBrains Mono → 系统等宽 |
+| App（Kotlin） | 值 |
+| --- | --- |
+| `BrandPrimary` / `BrandPrimaryDark` | `#2563EB` / `#1D4ED8` |
+| `BrandPrimaryLight` | `#DBEAFE` |
+| `BrandAccent` | `#06B6D4` |
+| `BrandSuccess` / `BrandError` / `BrandWarning` | `#10B981` / `#EF4444` / `#F59E0B` |
+| `LightBg` / `DarkBg` | `#F8FAFC` / `#0B1220` |
+| `LightSurface` / `DarkSurface` | `#FFFFFF` / `#111827` |
+| `LightTextPrimary` / `DarkTextPrimary` | `#0F172A` / `#F1F5F9` |
+| `LightTextSecondary` / `DarkTextSecondary` | `#64748B` / `#94A3B8` |
+| `LightBorder` / `DarkBorder` | `#E2E8F0` / `#1E293B` |
+| `RadiusSmall/Medium/Large` | `8 / 12 / 20 dp` |
+| `Dimens.Space1..8` | `4 / 8 / 12 / 16 / 24 / 32 dp` |
+| `MonoFontFamily` | JetBrains Mono → 系统等宽 |
+
+> **注意**：品牌色与语义色两端一致，但**版面语言已经分开**。
+> App 保持 Material 3（实色面 + 标准 elevation）；
+> 网站从 v1.2.0 起改为「渐变玻璃拟态」（光斑背景 + 半透明磨砂卡 + 渐变描边 + 大圆角），
+> 相关 Token 见 `web/css/style.css` 第 1/2 节与末尾第 20 节。
+> 改网站皮肤不需要同步改 App。
 
 ---
 

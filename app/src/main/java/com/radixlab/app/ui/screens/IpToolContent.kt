@@ -35,12 +35,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.radixlab.app.ui.components.BrandLogo
 import com.radixlab.app.ui.components.InfoCard
 import com.radixlab.app.ui.components.ResultCard
 import com.radixlab.app.ui.theme.ChipShape
@@ -54,14 +52,14 @@ import com.radixlab.app.viewmodel.IpInputType
 import com.radixlab.app.viewmodel.IpViewModel
 
 /**
- * IP 工具页。
+ * IP 工具内容区（嵌入首页选项卡使用，不再有独立页面和品牌头部）。
  *
  * IPv4：点分十进制 / 十进制整数 / 二进制 / 十六进制 四向互转，每段 0-255 严格校验。
  * IPv6：压缩形式与完整展开互转，支持内嵌 IPv4。
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun IpConverterScreen(
+fun IpToolContent(
     modifier: Modifier = Modifier,
     viewModel: IpViewModel = viewModel()
 ) {
@@ -72,30 +70,9 @@ fun IpConverterScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = Dimens.PageGutter)
-            .padding(top = Dimens.Space6, bottom = Dimens.Space8),
+            .padding(top = Dimens.Space4, bottom = Dimens.Space8),
         verticalArrangement = Arrangement.spacedBy(Dimens.Space4)
     ) {
-
-        // ---------------------------------------------------------------
-        // 头部
-        // ---------------------------------------------------------------
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            BrandLogo(size = Dimens.LogoMedium)
-            Spacer(modifier = Modifier.width(Dimens.Space3))
-            Column {
-                Text(
-                    text = "IP 工具",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = "IPv4 四向互转 · IPv6 压缩与展开",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
 
         // ===============================================================
         // IPv4
@@ -375,7 +352,7 @@ fun IpConverterScreen(
 
 /** 统一的错误提示条 */
 @Composable
-private fun ErrorBanner(message: String) {
+internal fun ErrorBanner(message: String) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.errorContainer,
