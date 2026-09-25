@@ -1,4 +1,4 @@
-# 进制工坊 · RadixLab
+# 进制工坊 ·  RadixLab
 
 `RadixLab` 仓库的源码。Kotlin + Jetpack Compose + Material 3，纯本地工具，
 **不申请任何权限（包括网络权限）**。
