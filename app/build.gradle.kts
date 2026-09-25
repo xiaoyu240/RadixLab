@@ -56,8 +56,9 @@ android {
         //   数字与结果换 Azeret Mono（随包自带）；主按钮改反色、芯片选中态改反色填充。
         // 1.3.2 = 小更新：内部整理与稳定性改进（外观与可见交互保持不变）。
         // 1.3.3 = 小更新：修正一处手势热区问题，并微调界面布局与交互。
-        versionCode = 8
-        versionName = "1.3.3"
+        // 1.3.4 = 小更新：键盘键位与宽度比例对齐系统输入法布局习惯。
+        versionCode = 9
+        versionName = "1.3.4"
 
         // 无自定义测试 runner，保持工程零冗余依赖
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
