@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   自适应图标（API 26+，与 minSdk 26 一致，无需额外密度资源）。
-  背景：#2563EB（brand-primary）
+  背景：#2563EB（启动图标蓝，固定值 —— 与网站导航栏的图标一致，不随品牌色变化）
   前景：ic_launcher_foreground.xml
   单色：同一份前景，用于 Android 13+ 主题化图标
 -->

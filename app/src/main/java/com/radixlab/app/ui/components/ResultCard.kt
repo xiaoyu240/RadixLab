@@ -27,13 +27,16 @@ import com.radixlab.app.ui.theme.CardShape
 import com.radixlab.app.ui.theme.Dimens
 import com.radixlab.app.ui.theme.MonoDisplay
 import com.radixlab.app.ui.theme.MonoLabel
+import com.radixlab.app.ui.theme.RadixCardBorder
+import com.radixlab.app.ui.theme.RadixResultCardBorder
 import com.radixlab.app.utils.rememberCopyAction
 
 /**
  * 结果卡。
  *
- * 规范对应：卡片 20dp 圆角、阴影 0 4px 16px rgba(15,23,42,.06)（映射为 2dp 高度），
- * 数值使用等宽字体，右侧提供一键复制。
+ * 规范对应：卡片直角、无阴影，结构靠 1px 细线；
+ * 数值使用 Azeret Mono 等宽字体，右侧提供一键复制。
+ * 唯一例外：结果卡的描边是品牌红（全屏唯一一处红色结构线），其余卡片一律灰细线。
  */
 @Composable
 fun ResultCard(
@@ -62,7 +65,8 @@ fun ResultCard(
                 MaterialTheme.colorScheme.surface
             }
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        border = if (highlighted) RadixResultCardBorder() else RadixCardBorder(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
             modifier = Modifier

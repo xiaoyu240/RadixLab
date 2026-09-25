@@ -48,6 +48,8 @@ import com.radixlab.app.ui.theme.MonoBody
 import com.radixlab.app.ui.theme.MonoLabel
 import com.radixlab.app.ui.theme.MonoSmall
 import com.radixlab.app.ui.theme.MonoTitle
+import com.radixlab.app.ui.theme.RadixOutlinedButtonBorder
+import com.radixlab.app.ui.theme.RadixOutlinedButtonColors
 import com.radixlab.app.viewmodel.IpInputType
 import com.radixlab.app.viewmodel.IpViewModel
 
@@ -96,8 +98,8 @@ fun IpToolContent(
                     shape = ChipShape,
                     label = { Text(text = type.label, style = MonoLabel) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        selectedLabelColor = MaterialTheme.colorScheme.background
                     )
                 )
             }
@@ -195,7 +197,9 @@ fun IpToolContent(
             OutlinedButton(
                 onClick = viewModel::toggleIpv4Steps,
                 modifier = Modifier.fillMaxWidth(),
-                shape = FieldShape
+                shape = FieldShape,
+                colors = RadixOutlinedButtonColors(),
+                border = RadixOutlinedButtonBorder()
             ) {
                 Icon(
                     imageVector = if (state.showSteps) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
@@ -315,7 +319,9 @@ fun IpToolContent(
             OutlinedButton(
                 onClick = viewModel::useCompressedAsInput,
                 modifier = Modifier.fillMaxWidth(),
-                shape = FieldShape
+                shape = FieldShape,
+                colors = RadixOutlinedButtonColors(),
+                border = RadixOutlinedButtonBorder()
             ) {
                 Icon(
                     imageVector = Icons.Outlined.SwapHoriz,

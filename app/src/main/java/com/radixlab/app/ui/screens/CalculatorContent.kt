@@ -51,6 +51,7 @@ import com.radixlab.app.ui.theme.MonoBody
 import com.radixlab.app.ui.theme.MonoLabel
 import com.radixlab.app.ui.theme.MonoSmall
 import com.radixlab.app.ui.theme.MonoTitle
+import com.radixlab.app.ui.theme.RadixResultCardBorder
 import com.radixlab.app.utils.rememberCopyAction
 import com.radixlab.app.viewmodel.CalculatorViewModel
 
@@ -326,8 +327,13 @@ private fun ResultBlock(
                 MaterialTheme.colorScheme.surface
             }
         ),
-        border = if (hasValue) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (hasValue) 2.dp else 0.dp)
+        // v5：结果卡描边用品牌红，空态用灰细线；一律无阴影
+        border = if (hasValue) {
+            RadixResultCardBorder()
+        } else {
+            BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        },
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
             modifier = Modifier

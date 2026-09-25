@@ -10,33 +10,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.radixlab.app.R
-import com.radixlab.app.ui.theme.BrandPrimary
-import com.radixlab.app.ui.theme.BrandPrimaryDark
 import com.radixlab.app.ui.theme.Dimens
-import com.radixlab.app.ui.theme.RadiusLarge
+import com.radixlab.app.ui.theme.LauncherBlue
+import com.radixlab.app.ui.theme.RadiusLogo
 
 /**
  * 品牌图标。
  *
- * 与网站 web/assets/icon.png、应用启动图标使用同一套图形语言：
- * 品牌蓝底 + 白色「10」（二进制）+ 青色强调点，圆角 20。
+ * 与网站导航栏、应用启动图标使用同一套图形语言：
+ * 蓝底 + 白色「10」（二进制），小圆角，平涂无渐变（v5 去掉一切渐变与光效）。
  */
 @Composable
 fun BrandLogo(
     modifier: Modifier = Modifier,
     size: Dp = Dimens.LogoMedium,
-    shape: Shape = RoundedCornerShape(RadiusLarge)
+    shape: Shape = RoundedCornerShape(RadiusLogo)
 ) {
     Box(
         modifier = modifier
             .size(size)
             .clip(shape)
-            .background(Brush.linearGradient(listOf(BrandPrimary, BrandPrimaryDark))),
+            .background(LauncherBlue),
         contentAlignment = Alignment.Center
     ) {
         Image(

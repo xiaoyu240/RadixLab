@@ -43,6 +43,9 @@ import com.radixlab.app.ui.theme.MonoBody
 import com.radixlab.app.ui.theme.MonoLabel
 import com.radixlab.app.ui.theme.MonoSmall
 import com.radixlab.app.ui.theme.MonoTitle
+import com.radixlab.app.ui.theme.RadixOutlinedButtonBorder
+import com.radixlab.app.ui.theme.RadixOutlinedButtonColors
+import com.radixlab.app.ui.theme.RadixPrimaryButtonColors
 import com.radixlab.app.utils.rememberCopyAction
 import com.radixlab.app.viewmodel.ConverterViewModel
 import com.radixlab.app.viewmodel.PRESET_BASES
@@ -134,7 +137,9 @@ fun ConverterContent(
         ) {
             OutlinedButton(
                 onClick = viewModel::swapBases,
-                shape = FieldShape
+                shape = FieldShape,
+                colors = RadixOutlinedButtonColors(),
+                border = RadixOutlinedButtonBorder()
             ) {
                 Icon(
                     imageVector = Icons.Outlined.SwapVert,
@@ -189,14 +194,17 @@ fun ConverterContent(
                 Button(
                     onClick = { copy(state.output) },
                     modifier = Modifier.weight(1f),
-                    shape = FieldShape
+                    shape = FieldShape,
+                    colors = RadixPrimaryButtonColors()
                 ) {
                     Text(text = "复制结果")
                 }
                 OutlinedButton(
                     onClick = viewModel::toggleSteps,
                     modifier = Modifier.weight(1f),
-                    shape = FieldShape
+                    shape = FieldShape,
+                    colors = RadixOutlinedButtonColors(),
+                    border = RadixOutlinedButtonBorder()
                 ) {
                     Icon(
                         imageVector = if (state.showSteps) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
@@ -234,7 +242,7 @@ fun ConverterContent(
         // ---------------------------------------------------------------
         // 说明
         // ---------------------------------------------------------------
-        InfoCard(title = "关于结果", borderColor = MaterialTheme.colorScheme.primaryContainer) {
+        InfoCard(title = "关于结果") {
             Text(
                 text = "· 采用 BigInteger 精确运算，不经过浮点，任意位数都不会丢精度",
                 style = MonoSmall,

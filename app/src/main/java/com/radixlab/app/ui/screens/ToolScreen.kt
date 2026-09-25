@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.radixlab.app.ui.theme.Dimens
 import com.radixlab.app.viewmodel.CalculatorViewModel
 import com.radixlab.app.viewmodel.ConverterViewModel
@@ -60,6 +62,12 @@ internal fun ToolScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+
+        // v5：页头下一条 1px 细线，与网站导航下边线同构
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
 
         when (tool) {
             HomeTool.CONVERTER -> ConverterContent(

@@ -2,14 +2,19 @@
 <resources>
 
     <!--
-      深色模式下的资源覆盖。
+      深色模式下的资源覆盖（v5 暖夜）。
       Compose 侧的颜色由 ui/theme/Color.kt 提供，这里只负责
       窗口背景（启动瞬间可见）与状态栏图标的显示，避免白屏闪一下。
     -->
-    <color name="bg">#0B1220</color>
-    <color name="surface">#111827</color>
-    <color name="text_primary">#F1F5F9</color>
-    <color name="text_secondary">#94A3B8</color>
-    <color name="border">#1E293B</color>
+    <color name="bg">#0D0C0B</color>
+    <color name="surface">#141210</color>
+    <color name="text_primary">#F2F1EE</color>
+    <color name="text_secondary">#A8A29A</color>
+    <color name="border">#2F2E2D</color>
+
+    <!-- 深色模式下的品牌色（更亮的橙红） -->
+    <color name="brand_primary">#FF5A33</color>
+    <color name="brand_primary_dark">#FF7A52</color>
+    <color name="brand_primary_light">#351C15</color>
 
 </resources>

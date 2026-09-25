@@ -5,24 +5,28 @@ import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
 /* ==========================================================================
-   进化工坊 / RadixLab — 圆角 Token
-   规范：小 8 / 中 12 / 大 20 / 按钮 12 / 卡片 20
+   进制工坊 / RadixLab — 圆角 Token（v5「大字网格」）
+   规范：全站直角（0），只有状态点与底部导航选中态用胶囊。
+   与 web/css/style.css 的 --radius-* 一致（--radius-btn / --radius-card = 0）。
    ========================================================================== */
 
-/** 小圆角 8dp —— 标签、输入框、小图标容器 */
-val RadiusSmall = 8.dp
+/** 直角 0dp —— 输入框、结果块、标签 */
+val RadiusSmall = 0.dp
 
-/** 中圆角 12dp —— 按钮、次级容器 */
-val RadiusMedium = 12.dp
+/** 直角 0dp —— 按钮、次级容器 */
+val RadiusMedium = 0.dp
 
-/** 大圆角 20dp —— 卡片、弹层、图片 */
-val RadiusLarge = 20.dp
+/** 直角 0dp —— 卡片、弹层 */
+val RadiusLarge = 0.dp
 
-/** 超大圆角 28dp —— 底部弹层（BottomSheet） */
-val RadiusExtraLarge = 28.dp
+/** 直角 0dp —— 底部弹层（BottomSheet） */
+val RadiusExtraLarge = 0.dp
 
-/** 胶囊圆角 —— 状态点、Chip */
+/** 胶囊圆角 —— 状态点、导航选中态（网站上 nav 选中态也是胶囊） */
 val RadiusPill = 999.dp
+
+/** 品牌标识专用小圆角（图标本身是圆角方块，不属于界面结构） */
+val RadiusLogo = 8.dp
 
 val RadixLabShapes = Shapes(
     extraSmall = RoundedCornerShape(RadiusSmall),
@@ -32,17 +36,17 @@ val RadixLabShapes = Shapes(
     extraLarge = RoundedCornerShape(RadiusExtraLarge)
 )
 
-/** 按钮统一 12dp 圆角（规范：按钮 12） */
+/** 按钮直角（规范：--radius-btn: 0） */
 val ButtonShape = RoundedCornerShape(RadiusMedium)
 
-/** 卡片统一 20dp 圆角（规范：卡片 20） */
+/** 卡片直角（规范：--radius-card: 0） */
 val CardShape = RoundedCornerShape(RadiusLarge)
 
-/** 输入框 / 结果块统一 12dp */
+/** 输入框 / 结果块直角 */
 val FieldShape = RoundedCornerShape(RadiusMedium)
 
-/** Chip 使用胶囊圆角 */
-val ChipShape = RoundedCornerShape(RadiusPill)
+/** Chip 直角（网站上 hdemo__chip 就是直角细线方块） */
+val ChipShape = RoundedCornerShape(RadiusSmall)
 
 /* ==========================================================================
    间距 / 尺寸 Token

@@ -81,9 +81,9 @@ fun BaseSelector(
                         null
                     },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        selectedLabelColor = MaterialTheme.colorScheme.background,
+                        selectedLeadingIconColor = MaterialTheme.colorScheme.background
                     )
                 )
             }
@@ -99,8 +99,8 @@ fun BaseSelector(
                     )
                 },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    selectedLabelColor = MaterialTheme.colorScheme.background
                 )
             )
         }

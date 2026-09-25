@@ -11,7 +11,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -93,41 +95,49 @@ fun RadixLabApp() {
                 exit = slideOutVertically(animationSpec = tween(BAR_MS)) { full -> full } +
                     fadeOut(animationSpec = tween(BAR_MS))
             ) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    // 关闭 Material 3 默认的染色提升，保证与网站底栏颜色完全一致
-                    tonalElevation = 0.dp
-                ) {
-                    BottomNavItem.entries.forEach { item ->
-                        NavigationBarItem(
-                            selected = currentRoute == item.route,
-                            onClick = {
-                                if (currentRoute != item.route) {
-                                    navController.navigate(item.route) {
-                                        // 单实例 + 状态保持，避免重复入栈
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
+                Column {
+                    // v5：栏顶一条 1px 细线，与网站导航的下边线同构（结构靠线不靠阴影）
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        // 关闭 Material 3 默认的染色提升，保证与网站底栏颜色完全一致
+                        tonalElevation = 0.dp
+                    ) {
+                        BottomNavItem.entries.forEach { item ->
+                            NavigationBarItem(
+                                selected = currentRoute == item.route,
+                                onClick = {
+                                    if (currentRoute != item.route) {
+                                        navController.navigate(item.route) {
+                                            // 单实例 + 状态保持，避免重复入栈
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
                                     }
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.label
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = item.label
+                                    )
+                                },
+                                label = { Text(text = item.label) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    // 选中态 = 网站 nav__link.is-active：品牌浅底 + on-tint 文字
+                                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                            },
-                            label = { Text(text = item.label) },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                selectedTextColor = MaterialTheme.colorScheme.primary,
-                                indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                        )
+                        }
                     }
                 }
             }

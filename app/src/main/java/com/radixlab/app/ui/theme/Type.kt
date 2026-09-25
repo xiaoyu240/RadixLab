@@ -2,22 +2,28 @@ package com.radixlab.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.radixlab.app.R
 
 /* ==========================================================================
-   进化工坊 / RadixLab — 字体规范
-   中文使用系统默认字体；数字与进制结果使用 JetBrains Mono / 等宽字体
+   进制工坊 / RadixLab — 字体规范（v5「大字网格」）
+   数字与标识符使用 Azeret Mono（与网站同为 Fontshare / ITF 出品，
+   免费商用、无需署名）；中文由系统字体兜底，行为与网站完全一致。
    ========================================================================== */
 
 /**
- * 等宽字体族。
- * Android 无内置 JetBrains Mono，因此走系统等宽（Roboto Mono / Droid Sans Mono）；
- * 若要使用真正的 JetBrains Mono，把字体文件放入 res/font 并改为
- * FontFamily(Font(R.font.jetbrains_mono_regular)) 即可。
+ * 等宽字体族 = Azeret Mono（随包自带，不联网下载）。
+ * 只覆盖拉丁字符与数字，中文与缺字形自动回落到系统字体。
  */
-val MonoFontFamily: FontFamily = FontFamily.Monospace
+val MonoFontFamily: FontFamily = FontFamily(
+    Font(R.font.azeret_mono_400, FontWeight.Normal),
+    Font(R.font.azeret_mono_500, FontWeight.Medium),
+    Font(R.font.azeret_mono_600, FontWeight.SemiBold),
+    Font(R.font.azeret_mono_700, FontWeight.Bold)
+)
 
 /** 进制结果 / 大数字展示 */
 val MonoDisplay = TextStyle(
@@ -71,38 +77,44 @@ val MonoLabel = TextStyle(
 
 private val Base = Typography()
 
-/** 全局排版：在 Material 3 默认排版上做少量品牌化调整 */
+/** 全局排版：在 Material 3 默认排版上做品牌化调整 */
 val RadixLabTypography = Typography(
+    // 标题统一收紧字距（网站 h1/h2/h3 为 -0.035em），靠字号对比撑版面
     displaySmall = Base.displaySmall.copy(
         fontWeight = FontWeight.Bold,
         fontSize = 34.sp,
         lineHeight = 40.sp,
-        letterSpacing = (-0.5).sp
+        letterSpacing = (-1.2).sp
     ),
     headlineMedium = Base.headlineMedium.copy(
         fontWeight = FontWeight.Bold,
         fontSize = 26.sp,
-        lineHeight = 32.sp
+        lineHeight = 32.sp,
+        letterSpacing = (-0.9).sp
     ),
     headlineSmall = Base.headlineSmall.copy(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
-        lineHeight = 28.sp
+        lineHeight = 28.sp,
+        letterSpacing = (-0.75).sp
     ),
     titleLarge = Base.titleLarge.copy(
         fontWeight = FontWeight.SemiBold,
         fontSize = 19.sp,
-        lineHeight = 26.sp
+        lineHeight = 26.sp,
+        letterSpacing = (-0.6).sp
     ),
     titleMedium = Base.titleMedium.copy(
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
-        lineHeight = 22.sp
+        lineHeight = 22.sp,
+        letterSpacing = (-0.5).sp
     ),
     titleSmall = Base.titleSmall.copy(
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 20.sp
+        lineHeight = 20.sp,
+        letterSpacing = (-0.2).sp
     ),
     bodyLarge = Base.bodyLarge.copy(fontSize = 16.sp, lineHeight = 24.sp),
     bodyMedium = Base.bodyMedium.copy(fontSize = 14.sp, lineHeight = 22.sp),

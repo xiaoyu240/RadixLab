@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--
+      v5「大字网格」token（浅色）。
+      真正的配色由 ui/theme/Color.kt 提供给 Compose，这里只保留
+      窗口背景（启动瞬间可见）与启动图标底色，避免白屏闪一下。
+      改色时两处一起改，保证与 web/css/style.css 的 :root 一致。
+    -->
+
     <!-- ==================== 品牌色 ==================== -->
-    <color name="brand_primary">#2563EB</color>
-    <color name="brand_primary_dark">#1D4ED8</color>
-    <color name="brand_primary_light">#DBEAFE</color>
-    <color name="brand_accent">#06B6D4</color>
-    <color name="brand_success">#10B981</color>
-    <color name="brand_error">#EF4444</color>
-    <color name="brand_warning">#F59E0B</color>
+    <color name="brand_primary">#EA3417</color>
+    <color name="brand_primary_dark">#C22B12</color>
+    <color name="brand_primary_light">#FDEFEC</color>
+    <color name="brand_accent">#2F9E77</color>
+    <color name="brand_success">#2F9E77</color>
+    <color name="brand_error">#D93843</color>
+    <color name="brand_warning">#E8930C</color>
 
-    <!-- ==================== 浅色模式表面 ==================== -->
-    <color name="bg">#F8FAFC</color>
+    <!-- ==================== 浅色模式表面（暖白） ==================== -->
+    <color name="bg">#FAFAF8</color>
     <color name="surface">#FFFFFF</color>
-    <color name="text_primary">#0F172A</color>
-    <color name="text_secondary">#64748B</color>
-    <color name="border">#E2E8F0</color>
+    <color name="text_primary">#101010</color>
+    <color name="text_secondary">#565656</color>
+    <color name="border">#D9D9D7</color>
 
-    <!-- ==================== 启动图标 ==================== -->
+    <!--
+      启动图标底色：保持蓝色不变。
+      图标图形（白色「10」）是按蓝底设计的，网站导航栏用的也是这张蓝底图标；
+      换成品牌红会让「10」糊在一起，也会与网站上的图标对不上。
+    -->
     <color name="ic_launcher_background">#2563EB</color>
 
 </resources>

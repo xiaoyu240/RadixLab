@@ -37,8 +37,8 @@ object ThemeMode {
 /**
  * 应用主题。
  *
- * 说明：不启用 Material You 动态取色 —— 品牌色由设计规范固定为 #2563EB，
- * 必须保证在网站与 App 上完全一致。
+ * 说明：不启用 Material You 动态取色 —— 品牌色由设计规范固定为 #EA3417
+ * （深色模式 #FF5A33），必须保证在网站与 App 上完全一致。
  */
 @Composable
 fun RadixLabTheme(

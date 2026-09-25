@@ -146,8 +146,8 @@ fun ProfileScreen(
                                 shape = ChipShape,
                                 label = { Text(text = ThemeMode.label(mode)) },
                                 colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                                    selectedLabelColor = MaterialTheme.colorScheme.background
                                 )
                             )
                         }
@@ -198,8 +198,8 @@ fun ProfileScreen(
                     shape = ChipShape,
                     label = { Text(text = "全部 ${history.size}") },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        selectedLabelColor = MaterialTheme.colorScheme.background
                     )
                 )
                 FilterChip(
@@ -215,8 +215,8 @@ fun ProfileScreen(
                         )
                     },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        selectedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        selectedLabelColor = MaterialTheme.colorScheme.background
                     )
                 )
             }

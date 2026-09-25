@@ -44,7 +44,7 @@ private fun formatTime(timestamp: Long): String =
 
 /**
  * 单条历史记录。
- * 点击回填到转换页，右侧提供收藏与删除。圆角 20、1px 描边、等宽数值。
+ * 点击回填到转换页，右侧提供收藏与删除。直角、1px 细线、无阴影、等宽数值。
  */
 @Composable
 fun HistoryItem(
@@ -61,7 +61,7 @@ fun HistoryItem(
         shape = CardShape,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
             modifier = Modifier
