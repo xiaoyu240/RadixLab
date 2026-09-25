@@ -55,8 +55,9 @@ android {
         //   品牌色蓝 → 暖橙红；表面色改暖白 / 暖夜；全站直角 + 1px 细线、去阴影；
         //   数字与结果换 Azeret Mono（随包自带）；主按钮改反色、芯片选中态改反色填充。
         // 1.3.2 = 小更新：内部整理与稳定性改进（外观与可见交互保持不变）。
-        versionCode = 7
-        versionName = "1.3.2"
+        // 1.3.3 = 小更新：修正一处手势热区问题，并微调界面布局与交互。
+        versionCode = 8
+        versionName = "1.3.3"
 
         // 无自定义测试 runner，保持工程零冗余依赖
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

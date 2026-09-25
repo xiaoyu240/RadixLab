@@ -1,9 +1,14 @@
 package com.radixlab.app.ui.terminal
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -69,6 +75,7 @@ fun TerminalScreen(
     var altArmed by remember { mutableStateOf(false) }
     var matrix by remember { mutableStateOf<TerminalEngine.MatrixOptions?>(null) }
     var ready by remember { mutableStateOf(false) }
+    var keyboardVisible by remember { mutableStateOf(true) }
 
     var blinkOn by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
@@ -105,7 +112,7 @@ fun TerminalScreen(
     }
 
     val scroll = rememberScrollState()
-    LaunchedEffect(lines.size, matrix) {
+    LaunchedEffect(lines.size, matrix, keyboardVisible) {
         if (matrix == null && lines.isNotEmpty()) scroll.animateScrollTo(scroll.maxValue)
     }
 
@@ -291,7 +298,23 @@ fun TerminalScreen(
                     text = "v1.0",
                     style = mono(11.sp, FontWeight.Normal, INK_DIM)
                 )
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .border(
+                            1.dp,
+                            if (keyboardVisible) INK_OK.copy(alpha = 0.55f)
+                            else INK_BRIGHT.copy(alpha = 0.30f)
+                        )
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = { keyboardVisible = !keyboardVisible })
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    KeyGlyph(tint = if (keyboardVisible) INK_OK else INK_DIM)
+                }
+                Spacer(modifier = Modifier.width(6.dp))
                 Box(
                     modifier = Modifier
                         .size(26.dp)
@@ -329,6 +352,12 @@ fun TerminalScreen(
             }
 
             if (matrix == null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(INK_OK.copy(alpha = 0.18f))
+                )
                 val promptText = TerminalEngine.prompt(shell.cwd)
                 val caret = if (blinkOn) "▌" else " "
                 val before = input.take(cursor.coerceIn(0, input.length))
@@ -336,22 +365,46 @@ fun TerminalScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                        .padding(horizontal = 10.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = promptText, style = mono(13.sp, FontWeight.Medium, INK_OK))
                     Text(
                         text = before + caret + after,
-                        style = mono(13.sp, FontWeight.Medium, INK_BRIGHT)
+                        style = mono(13.sp, FontWeight.Medium, INK_BRIGHT),
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1
                     )
+                    if (!keyboardVisible) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Row(
+                            modifier = Modifier
+                                .border(1.dp, INK_OK.copy(alpha = 0.45f))
+                                .pointerInput(Unit) {
+                                    detectTapGestures(onTap = { keyboardVisible = true })
+                                }
+                                .padding(horizontal = 7.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            KeyGlyph(tint = INK_OK)
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(text = "键盘", style = mono(11.sp, FontWeight.Medium, INK_OK))
+                        }
+                    }
                 }
             }
 
-            TerminalKeyboard(
-                ctrlArmed = ctrlArmed,
-                altArmed = altArmed,
-                onKey = { key -> if (ready) handleKey(key) }
-            )
+            AnimatedVisibility(
+                visible = keyboardVisible,
+                enter = expandVertically(animationSpec = tween(200)) + fadeIn(animationSpec = tween(200)),
+                exit = shrinkVertically(animationSpec = tween(180)) + fadeOut(animationSpec = tween(120))
+            ) {
+                TerminalKeyboard(
+                    ctrlArmed = ctrlArmed,
+                    altArmed = altArmed,
+                    onKey = { key -> if (ready) handleKey(key) }
+                )
+            }
         }
 
         Box(
@@ -410,6 +463,35 @@ fun TerminalScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun KeyGlyph(tint: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.size(14.dp)) {
+        val stroke = 1.3f
+        val w = size.width
+        val h = size.height
+        drawRect(
+            color = tint,
+            topLeft = Offset(stroke / 2f, stroke / 2f),
+            size = androidx.compose.ui.geometry.Size(w - stroke, h - stroke),
+            style = Stroke(width = stroke)
+        )
+        val topRow = h * 0.42f
+        val bottomRow = h * 0.68f
+        drawLine(
+            color = tint,
+            start = Offset(w * 0.24f, topRow),
+            end = Offset(w * 0.76f, topRow),
+            strokeWidth = stroke
+        )
+        drawLine(
+            color = tint,
+            start = Offset(w * 0.30f, bottomRow),
+            end = Offset(w * 0.70f, bottomRow),
+            strokeWidth = stroke
+        )
     }
 }
 

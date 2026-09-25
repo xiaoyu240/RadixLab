@@ -3,17 +3,18 @@ package com.radixlab.app.ui.terminal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
@@ -49,7 +53,7 @@ sealed interface TerminalKey {
 
 private val INK = Color(0xFFECECEC)
 private val PANEL_BG = Color(0xFF040604)
-private const val GRID_COLS = 10
+private val EDGE = INK.copy(alpha = 0.28f)
 
 private val LETTER_ROWS = listOf(
     listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0"),
@@ -65,6 +69,21 @@ private val SYMBOL_ROWS = listOf(
     listOf("|", "?", "π", "×", "÷", "√", "∞", "°", "±", "§")
 )
 
+private val FN_KEYS: List<Pair<String, TerminalKey>> = listOf(
+    "ESC" to TerminalKey.Escape,
+    "TAB" to TerminalKey.Tab,
+    "CTRL" to TerminalKey.Ctrl,
+    "ALT" to TerminalKey.Alt,
+    "↑" to TerminalKey.ArrowUp,
+    "↓" to TerminalKey.ArrowDown,
+    "←" to TerminalKey.ArrowLeft,
+    "→" to TerminalKey.ArrowRight,
+    "^C" to TerminalKey.Interrupt,
+    "^D" to TerminalKey.Eof,
+    "CLR" to TerminalKey.ClearLine
+)
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TerminalKeyboard(
     modifier: Modifier = Modifier,
@@ -79,26 +98,31 @@ fun TerminalKeyboard(
         modifier = modifier
             .fillMaxWidth()
             .background(PANEL_BG)
-            .padding(horizontal = 6.dp, vertical = 6.dp),
+            .drawBehind {
+                drawRect(
+                    color = EDGE,
+                    topLeft = Offset.Zero,
+                    size = Size(size.width, 1.dp.toPx())
+                )
+            }
+            .padding(horizontal = 5.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            FnKey("ESC") { onKey(TerminalKey.Escape) }
-            FnKey("TAB") { onKey(TerminalKey.Tab) }
-            FnKey("CTRL", active = ctrlArmed) { onKey(TerminalKey.Ctrl) }
-            FnKey("ALT", active = altArmed) { onKey(TerminalKey.Alt) }
-            FnKey("↑") { onKey(TerminalKey.ArrowUp) }
-            FnKey("↓") { onKey(TerminalKey.ArrowDown) }
-            FnKey("←") { onKey(TerminalKey.ArrowLeft) }
-            FnKey("→") { onKey(TerminalKey.ArrowRight) }
-            FnKey("^C") { onKey(TerminalKey.Interrupt) }
-            FnKey("^D") { onKey(TerminalKey.Eof) }
-            FnKey("CLR") { onKey(TerminalKey.ClearLine) }
+            FN_KEYS.forEach { (label, key) ->
+                FnKey(
+                    label = label,
+                    active = when (key) {
+                        TerminalKey.Ctrl -> ctrlArmed
+                        TerminalKey.Alt -> altArmed
+                        else -> false
+                    }
+                ) { onKey(key) }
+            }
         }
 
         val rows = if (symbolPage) SYMBOL_ROWS else LETTER_ROWS
@@ -167,7 +191,7 @@ private fun RowScope.Key(
     Box(
         modifier = Modifier
             .weight(weight)
-            .height(38.dp)
+            .height(36.dp)
             .background(bg)
             .border(1.dp, borderColor)
             .pointerInput(label, onLongPress) {
@@ -203,15 +227,16 @@ private fun FnKey(
 
     Box(
         modifier = Modifier
-            .height(32.dp)
+            .height(30.dp)
+            .defaultMinSize(minWidth = 44.dp)
             .background(bg)
             .border(1.dp, if (pressed || active) INK else INK.copy(alpha = 0.32f))
-            .padding(horizontal = 12.dp)
             .pointerInput(label) {
                 detectTapGestures(
                     onTap = { onClick() }
                 )
-            },
+            }
+            .padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
