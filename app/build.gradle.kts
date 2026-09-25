@@ -51,8 +51,12 @@ android {
         // 1.3.0 = 中更新（用户定的「动第二位」口径）：
         //   全应用锁定竖屏；工具页改成独立路由，进入时不再显示底部导航栏；
         //   新增推入 / 弹出转场动画；首页返回改为双击退出，其他页面返回是回上一页。
-        versionCode = 5
-        versionName = "1.3.0"
+        // 1.3.1 = 小更新：UI 全面对齐网站 v5「大字网格」——
+        //   品牌色蓝 → 暖橙红；表面色改暖白 / 暖夜；全站直角 + 1px 细线、去阴影；
+        //   数字与结果换 Azeret Mono（随包自带）；主按钮改反色、芯片选中态改反色填充。
+        // 1.3.2 = 小更新：内部整理与稳定性改进（外观与可见交互保持不变）。
+        versionCode = 7
+        versionName = "1.3.2"
 
         // 无自定义测试 runner，保持工程零冗余依赖
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

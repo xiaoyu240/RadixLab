@@ -200,16 +200,16 @@ git push -u origin main
 ./gradlew assembleRelease
 
 # 用 gh CLI 发布（首次需 gh auth login）
-gh release create v1.3.0 \
-  app/build/outputs/apk/release/app-release.apk#RadixLab-1.3.0.apk \
-  --title "进制工坊 v1.3.0" \
-  --notes "全应用锁定竖屏；工具页改为独立路由，进入后不再显示底部导航栏，并带推入/弹出转场动画；首页返回改为双击退出。"
+gh release create v1.3.2 \
+  app/build/outputs/apk/release/app-release.apk#RadixLab-1.3.2.apk \
+  --title "进制工坊 v1.3.2" \
+  --notes "内部整理与稳定性改进。外观与功能与上一版保持一致。"
 ```
 
 发布后，官网的下载按钮即可使用永久链接：
 
 ```
-https://github.com/xiaoyu240/RadixLab/releases/latest/download/RadixLab-1.3.0.apk
+https://github.com/xiaoyu240/RadixLab/releases/latest/download/RadixLab-1.3.2.apk
 ```
 
 ---

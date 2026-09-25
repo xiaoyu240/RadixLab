@@ -21,6 +21,7 @@ import com.radixlab.app.ui.screens.HomeScreen
 import com.radixlab.app.ui.screens.HomeTool
 import com.radixlab.app.ui.screens.ProfileScreen
 import com.radixlab.app.ui.screens.ToolScreen
+import com.radixlab.app.ui.terminal.TerminalScreen
 import com.radixlab.app.viewmodel.CalculatorViewModel
 import com.radixlab.app.viewmodel.ConverterViewModel
 import com.radixlab.app.viewmodel.IpViewModel
@@ -44,6 +45,8 @@ private const val FADE_MS = 220
 
 /** 退场页面的位移比例：只滑出 1/3 屏，形成「上一层被压在下面」的层次感。 */
 private const val OUTGOING_SHIFT = 3
+
+private const val TERMINAL_ROUTE = "terminal"
 
 /**
  * 应用导航图。
@@ -84,8 +87,23 @@ fun AppNavHost(
                         // 连点两次卡片不会入栈两次
                         launchSingleTop = true
                     }
+                },
+                onLogoTaps = {
+                    navController.navigate(TERMINAL_ROUTE) {
+                        launchSingleTop = true
+                    }
                 }
             )
+        }
+
+        composable(
+            route = TERMINAL_ROUTE,
+            enterTransition = { fadeIn(animationSpec = tween(FADE_MS)) },
+            exitTransition = { fadeOut(animationSpec = tween(FADE_MS)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(FADE_MS)) },
+            popExitTransition = { fadeOut(animationSpec = tween(FADE_MS)) }
+        ) {
+            TerminalScreen(onExit = { navController.popBackStack() })
         }
 
         composable(BottomNavItem.PROFILE.route) {

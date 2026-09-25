@@ -3,6 +3,7 @@ package com.radixlab.app.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Calculate
 import androidx.compose.material.icons.outlined.Language
@@ -27,9 +26,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.radixlab.app.ui.components.BrandLogo
@@ -77,8 +82,29 @@ internal enum class HomeTool(
 @Composable
 internal fun HomeScreen(
     onToolClick: (HomeTool) -> Unit,
+    onLogoTaps: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var tapCount by remember { mutableIntStateOf(0) }
+    var lastTapAt by remember { mutableLongStateOf(0L) }
+
+    val logoTapModifier = Modifier.pointerInput(onLogoTaps) {
+        detectTapGestures(
+            onTap = {
+                val now = System.currentTimeMillis()
+                val next = if (now - lastTapAt > 700L) 1 else tapCount + 1
+                lastTapAt = now
+                if (next >= 5) {
+                    tapCount = 0
+                    lastTapAt = 0L
+                    onLogoTaps()
+                } else {
+                    tapCount = next
+                }
+            }
+        )
+    }
+
     // 刻意不加 verticalScroll：
     // 可滚动列的高度约束是无限的，Spacer(weight(1f)) 会被当成 0，宫格就贴不到垂直居中。
     // 竖屏锁定后 3 张卡片（2 行正方形）在任何手机上都放得下，不需要滚动。
@@ -88,8 +114,10 @@ internal fun HomeScreen(
             .padding(horizontal = Dimens.PageGutter)
             .padding(top = Dimens.Space6, bottom = Dimens.Space8)
     ) {
-        // 品牌头部
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = logoTapModifier
+        ) {
             BrandLogo(size = Dimens.LogoMedium)
             Spacer(modifier = Modifier.width(Dimens.Space3))
             Column {
